@@ -8,9 +8,6 @@ var anyToJSON = require('anytojson');
 var crossfilter = require('crossfilter');
 var d3 = require('d3');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -31,8 +28,8 @@ var groups      = {};
 
 app.get("/refresh", function(req, res, next){
   var results = {};
-  filter = req.param("filter") ? JSON.parse(req.param("filter")) : {}
-  console.log(filter);  
+  filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+  console.log(filter);
   for(dimension in groups){
     console.log(dimension);
     var group = groups[dimension];
@@ -48,9 +45,12 @@ app.get("/refresh", function(req, res, next){
 });
 
 
-
-app.use('/', routes);
-app.use('/users', users);
+app.use('/lib', express.static('node_modules/crossfilter/'));
+app.use('/lib', express.static('node_modules/dc/'));
+app.use('/lib', express.static('node_modules/d3/'));
+app.get('/', function(req, res, next) {
+    res.render('index', { title: 'Express' });
+  });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -227,11 +227,11 @@ anyToJSON.csv({path: "data/ndx.csv"}, function(data){
       console.log(dimension);
     dimensions.yearlyDimension = yearlyDimension;
     dimensions.dayOfWeekGroup = dayOfWeek;
-    
-    groups.yearlyPerformanceGroup = yearlyPerformanceGroup; 
-    groups.monthlyMoveGroup = monthlyMoveGroup; 
+
+    groups.yearlyPerformanceGroup = yearlyPerformanceGroup;
+    groups.monthlyMoveGroup = monthlyMoveGroup;
     groups.volumeByMonthGroup = volumeByMonthGroup;
-    groups.indexAvgByMonthGroup = indexAvgByMonthGroup;  
+    groups.indexAvgByMonthGroup = indexAvgByMonthGroup;
     groups.quarterGroup = quarterGroup;
     groups.dayOfWeekGroup = dayOfWeekGroup;
 

@@ -9,7 +9,8 @@ var numberFormat = d3.format('.2f');
 
 function refresh(queryFilter, cb) {
   d3.json("/refresh?filter=" + JSON.stringify(queryFilter), function (d) {
-    console.log(d);
+    console.log('fetching using filter', queryFilter)
+    console.log('got', d);
     filteredData = d;
     if (typeof cb === "function") {
       cb();
@@ -121,5 +122,13 @@ yearlyBubbleChart.width(900)
       'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
     ].join('\n');
   })
+
+yearlyBubbleChart.filterHandler(function (dimension, filters) {
+  if (filters)
+    dimension.filter(filters);
+  else
+    dimension.filter(null);
+  return filters;
+});
 
 refresh({}, () => dc.renderAll());

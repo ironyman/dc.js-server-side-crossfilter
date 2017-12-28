@@ -29,9 +29,9 @@ var groups      = {};
 app.get("/refresh", function(req, res, next){
   var results = {};
   filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-  console.log(filter);
+  console.log('filter', filter);
   for(dimension in groups){
-    console.log(dimension);
+    console.log('dimension', dimension);
     var group = groups[dimension];
     if(filter[dimension]){
       console.log(dimension);

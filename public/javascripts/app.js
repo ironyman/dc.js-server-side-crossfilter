@@ -19,17 +19,20 @@ function refresh(queryFilter, cb) {
 }
 
 // The bar chart.
+// Fake the crossfilter object by implementing dimension methods.
 var dayOfWeekDim = {
   filter: function (f) {
     if (f) {
       queryFilter["dayOfWeekGroup"] = f;
-      refresh(queryFilter);
+      refresh(queryFilter, () => dc.redrawAll());
+
     }
   },
   filterAll: function () {
 
   }
 };
+// Crossfilter group methods.
 var dayOfWeekGroup = {
   all: function () {
     console.log(filteredData);
@@ -63,7 +66,7 @@ var yearlyDimension = {
   filter: function (f) {
     if (f) {
       queryFilter["yearlyDimension"] = f;
-      refresh(queryFilter);
+      refresh(queryFilter, () => dc.redrawAll());
     }
   },
   filterAll: function () {
